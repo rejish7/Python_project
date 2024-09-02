@@ -32,7 +32,7 @@
                       <div class="widget">
                           <h4 class="widget-title">Customer Service</h4><!-- End .widget-title -->
                           <ul class="widget-list">
-                              <li><a href="#">Payment Methods</a></li>
+                              <li><a href="{% url 'payment' %}">Payment Methods Info</a></li>
                               <li><a href="#">Money-back guarantee!</a></li>
                               <li><a href="#">Returns</a></li>
                               <li><a href="#">Shipping</a></li>
@@ -49,7 +49,7 @@
                           <ul class="widget-list">
                               <li><a href="{% url 'login'%}">Sign In</a></li>
                               <li><a href="{% url 'cart'%}">View Cart</a></li>
-                              {% comment %} <li><a href="{% url 'wishlist'%}">My Wishlist</a></li> {% endcomment %}
+                              <li><a href="{% url 'wishlist'%}">My Wishlist</a></li> 
                               <li><a href="{% url 'cart'%}">Track My Order</a></li>
                               <li><a href="{% url 'contact'%}">Help</a></li>
                           </ul><!-- End .widget-list -->

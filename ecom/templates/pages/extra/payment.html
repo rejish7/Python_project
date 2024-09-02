@@ -1,0 +1,69 @@
+{% extends "layouts/master.html" %}
+{% load static %}
+{% block title %}
+Payments
+{% endblock %}
+
+
+{% block content %}
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url({% static 'images/page-header-bg.jpg' %})">
+        <div class="container">
+            <h1 class="page-title">Payment Info</h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav breadcrumb-with-filter">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Payments</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+    <div class="container">
+        <div class="row">
+                <div class="col-lg-11">
+                    <article >
+                        <h3 class="center">
+                            Welcome to our Payment Method Information page!
+                        </h3>
+                        <p>
+                            At TrendAura, we strive to provide a seamless and secure shopping experience for our valued customers.
+                            Understanding our payment methods is essential for a smooth transaction process.
+                            Below, you will find detailed information about the various payment options available to you when shopping with us.
+                        
+                        </p>
+                        <p>
+                            <h3>Accepted Payment Methods</h3>
+                            <h4>Credit and Debit Cards </h4>
+                            <p>We accept major credit and debit cards, including Visa, Mastercard, and others. This option allows you to make quick and secure payments directly through our website. Simply enter your card details at checkout, and your transaction will be processed securely.</p>
+                            <h4>Digital Wallets</h4>
+                            <p>Enjoy the convenience of digital wallets! We accept payments through popular platforms such as Khalti, Esewa, and iPAY. These wallets allow you to store funds and make payments without the need to enter your card information each time. Simply log in to your wallet account during checkout for a hassle-free experience.</p>
+                            <h4>Bank Transfers and E-Banking</h4>
+                            <p>For those who prefer traditional banking methods, we also accept bank transfers and e-banking transactions. This option is ideal for customers who wish to pay directly from their bank accounts. Please ensure that you provide the correct transaction details to avoid any delays in processing your order.</p>
+                            <h4>Cash on Delivery (COD) </h4>
+                            <p>We understand that some customers prefer to pay in cash. That's why we offer a Cash on Delivery option for select products. Simply choose this payment method at checkout, and pay the delivery person when your order arrives at your doorstep.</p>
+
+                        </p>
+                    </article>
+                </div>
+                <br>
+                <div class="col-lg-1 order-lg-first mb-2 mb-lg-0">
+                    <div class="sticky-content">
+                        <div class="social-icons social-icons-colored social-icons-vertical">
+                            <span class="social-label">SHARE:</span>
+                            <a href="{{setting.facebook}}" class="social-icon social-facebook" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+                            <a href="{{setting.twitter}}" class="social-icon social-twitter" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+                            <a href="{{setting.instagram}}" class="social-icon social-instagram" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+                            <a href="{{setting.linkedin}}" class="social-icon social-linkedin" title="Linkedin" target="_blank"><i class="icon-linkedin"></i></a>
+                        </div><!-- End .soial-icons -->
+                    </div><!-- End .sticky-content -->
+                </div><!-- End .col-lg-1 -->
+            </div>
+        </div>
+    </div>
+</main>
+
+
+{% endblock%}

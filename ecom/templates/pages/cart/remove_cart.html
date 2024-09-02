@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container mt-5">
     <h2>Remove Item from Cart</h2>
-    <form method="post" action="{% url 'remove_from_cart' %}">
+    <form method="post" action="{% url 'remove_cart' %}">
         {% csrf_token %}
         <div class="form-group">
             <label for="item_id">Select Item to Remove:</label>
