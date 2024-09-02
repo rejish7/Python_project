@@ -1,0 +1,225 @@
+{% load static %}
+
+<body>
+  <div class="page-wrapper">
+    <header class="header">
+      <div class="header-top">
+        <div class="container">
+          <div class="header-left">
+            <div class="header-dropdown">
+              <a href="#">Eng</a>
+              <div class="header-menu">
+                <ul>
+                  <li><a href="#">English</a></li>
+                  <li><a href="#">Nepali</a></li>
+                </ul>
+              </div>
+              <!-- End .header-menu -->
+            </div>
+            <!-- End .header-dropdown -->
+          </div>
+          <!-- End .header-left -->
+
+          <div class="header-right">
+            <ul class="top-menu">
+              <li>
+                <a href="#">Links</a>
+                <ul>
+                  <li>
+                    <a href="tel:{{setting.phone|safe}}"
+                      ><i class="icon-phone"></i>Call: {{setting.phone}}</a
+                    >
+                  </li>
+                  <li>
+                    <a href="{% url 'wishlist' %}"
+                      ><i class="icon-heart-o"></i>Wishlist
+                      <span>({{ wishlist_count }})</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="{% url 'login' %}"
+                      ><i class="icon-user"></i>Login</a
+                    >
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <!-- End .top-menu -->
+          </div>
+          <!-- End .header-right -->
+        </div>
+        <!-- End .container -->
+      </div>
+      <!-- End .header-top -->
+
+      <div class="header-middle sticky-header">
+        <div class="container">
+          <div class="header-left">
+            <button class="mobile-menu-toggler">
+              <span class="sr-only">Toggle mobile menu</span>
+              <i class="icon-bars"></i>
+            </button>
+
+            <a href="index.html" class="logo">
+              <img
+                src="{{setting.logo.url}}"
+                alt="TrendAura Logo"
+                width="105"
+                height="25"
+              />
+            </a>
+
+            <nav class="main-nav">
+              <ul class="menu">
+                <li>
+                  <a href="{% url 'home' %}" class="ul">Home</a>
+                </li>
+                {% comment %} <li>
+                  <a href="{% url 'category' %}" class="ul">Category</a>
+                </li> {% endcomment %}
+                <li>
+                  <a href="{% url 'product' %}" class="ul">Product</a>
+                </li>
+                <li>
+                  <a href="{% url 'about' %}" class="ul">About</a>
+                </li>
+                <li>
+                  <a href="{% url 'contact' %}" class="ul">Contact</a>
+                </li>
+                <li>
+                  <a href="{% url 'blog' %}" class="ul">Blog</a>
+                </li>
+              </ul>
+              <!-- End .menu -->
+            </nav>
+            <!-- End .main-nav -->
+          </div>
+          <!-- End .header-left -->
+
+          <div class="header-right">
+            <div class="header-search">
+              <a href="#" class="search-toggle" role="button" title="Search"
+                ><i class="icon-search"></i
+              ></a>
+              <form action="#" method="get">
+                <div class="header-search-wrapper">
+                  <label for="q" class="sr-only">Search</label>
+                  <input
+                    type="search"
+                    class="form-control"
+                    name="q"
+                    id="q"
+                    placeholder="Search in..."
+                    required
+                  />
+                </div>
+                <!-- End .header-search-wrapper -->
+              </form>
+            </div>
+            <!-- End .header-search -->
+
+            <div class="cart">
+              <a
+                href="{% url 'cart' %}"
+                class="cart-toggle"
+                role="button"
+                title="cart"
+              >
+                <i class="icon-shopping-cart"></i>
+                {% comment %} <span class="cart-count"></span> {% endcomment %}
+              </a>
+            </div>
+          </div>
+          <!-- End .header-right -->
+        </div>
+        <!-- End .container -->
+      </div>
+      <!-- End .header-middle -->
+    </header>
+    <!-- End .header -->
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div>
+    <!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container">
+      <div class="mobile-menu-wrapper">
+        <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+        <form action="#" method="get" class="mobile-search">
+          <label for="mobile-search" class="sr-only">Search</label>
+          <input
+            type="search"
+            class="form-control"
+            name="mobile-search"
+            id="mobile-search"
+            placeholder="Search in..."
+            required
+          />
+          <button class="btn btn-primary" type="submit">
+            <i class="icon-search"></i>
+          </button>
+        </form>
+
+        <nav class="mobile-nav">
+          <ul class="mobile-menu">
+            <li class="active">
+              <a href="{% url 'home' %}" class="ul">Home</a>
+            </li>
+            {% comment %} <li>
+              <a href="{% url 'product_category' %}" class="ul">Category</a>
+            </li> {% endcomment %}
+            <li>
+              <a href="{% url 'product' %}" class="ul">Product</a>
+            </li>
+            <li>
+              <a href="{% url 'about' %}" class="ul">About</a>
+            </li>
+            <li>
+              <a href="{% url 'contact' %}" class="ul">Contact</a>
+            </li>
+            <li>
+              <a href="{% url 'blog' %}" class="ul">Blog</a>
+            </li>
+          </ul>
+        </nav>
+        <!-- End .mobile-nav -->
+
+        <div class="social-icons">
+          <a
+            href="{{setting.facebook}}"
+            class="social-icon"
+            target="_blank"
+            title="Facebook"
+            ><i class="icon-facebook-f"></i
+          ></a>
+          <a
+            href="{{setting.twitter}}"
+            class="social-icon"
+            target="_blank"
+            title="Twitter"
+            ><i class="icon-twitter"></i
+          ></a>
+          <a
+            href="{{setting.instagram}}"
+            class="social-icon"
+            target="_blank"
+            title="Instagram"
+            ><i class="icon-instagram"></i
+          ></a>
+          <a
+            href="{{setting.youtube}"
+            class="social-icon"
+            target="_blank"
+            title="Youtube"
+            ><i class="icon-youtube"></i
+          ></a>
+        </div>
+        <!-- End .soial-icons -->
+      </div>
+      <!-- End .social-icons -->
+    </div>
+    <!-- End .mobile-menu-wrapper -->
+  </div>
+  <!-- End .mobile-menu-container -->
+</body>

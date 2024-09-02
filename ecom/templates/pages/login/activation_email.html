@@ -1,0 +1,17 @@
+
+{% autoescape off %}
+Hi {{ user.username }},
+
+Thank you for creating an account with our e-commerce platform. To activate your account, please click on the link below:
+
+{{ protocol }}://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+This link will expire in {{ expiration_days }} days.
+
+If you did not create an account, please disregard this email.
+
+Best regards,
+The Pasal Team
+
+    
+{% endautoescape %}

@@ -1,0 +1,22 @@
+
+{% extends 'layouts/master.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Remove Item from Cart</h2>
+    <form method="post" action="{% url 'remove_from_cart' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="item_id">Select Item to Remove:</label>
+            <select class="form-control" id="item_id" name="item_id" required>
+                {% for item in cart_items %}
+                    <option value="{{ item.name }}">{{ item.product.name }} - Quantity: {{ item.quantity }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-danger mt-3">Remove from Cart</button>
+    </form>
+    <a href="{% url 'cart' %}" class="btn btn-secondary mt-3">Back to Cart</a>
+</div>
+{% endblock %}
+ 
