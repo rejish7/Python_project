@@ -234,4 +234,15 @@ class WishlistItem(models.Model):
         verbose_name = 'Wishlist Item'
         verbose_name_plural = 'Wishlist Items'
         unique_together = ('user', 'product')
+
+
+class FAQ(models.Model):
+    question = RichTextField()
+    answer = RichTextField()
     
+    def __str__(self):
+        return self.question
+    
+    class Meta:
+        verbose_name = 'faq'
+        verbose_name_plural = 'faq'

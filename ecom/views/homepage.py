@@ -1,6 +1,6 @@
 from django.views import View
 from django.shortcuts import render,redirect,get_object_or_404
-from ecom.models import Category,CompanyService,Banner,Product,Bestselling,WishlistItem
+from ecom.models import Category,CompanyService,Banner,Product,Bestselling,WishlistItem,FAQ
 
 def home(request):
     category = Category.objects.all()[:4]
@@ -32,3 +32,10 @@ def service (request):
 
 def payment (request):
     return render(request,'pages/extra/payment.html')
+
+def faq (request):
+    faq = FAQ.objects.all()
+    data={
+        'faq':faq,
+    }
+    return render(request,'pages/faq/faq.html',data)

@@ -14,6 +14,7 @@ urlpatterns = [
       path('product/<id>/', productsee.product_detail, name='product_detail'),
       path("blog/", homepage.blog, name="blog"),
       path("product/<slug:slug>/", productsee.product_detail, name="product_detail"),
+      path("faq/",homepage.faq,name="faq"),
       path("about/", about1.about, name="about"),
       path("contact/", contact1.contact, name="contact"),
       path("signup/", account.signup_view, name="signup"),

@@ -134,3 +134,7 @@ class WishlistItemAdmin(admin.ModelAdmin):
     list_display = ('user', 'product', 'created_at', 'updated_at')
     list_filter = ('created_at', 'updated_at')
     search_fields = ('user__username', 'product__name')
+    
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    list_display = ('question','answer')

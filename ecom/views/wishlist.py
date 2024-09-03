@@ -2,19 +2,6 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.views import View
 from ecom.models import WishlistItem, Product, CartItem
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
-from django.core.mail import EmailMessage,send_mail
-from django.urls import reverse
-from project_2 import settings
-from django.contrib.sites.shortcuts import get_current_site
-from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.contrib.auth.tokens import default_token_generator
-from ecom.tokens import activation_token
-from django.db.models import F, Sum
-from decimal import Decimal
 from django.contrib.auth.decorators import login_required
 
 
