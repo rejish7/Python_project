@@ -138,3 +138,4 @@ class WishlistItemAdmin(admin.ModelAdmin):
 @admin.register(FAQ)
 class FAQAdmin(admin.ModelAdmin):
     list_display = ('question','answer')
+
