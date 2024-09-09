@@ -151,5 +151,3 @@ CKEDITOR_CONFIGS = {
         'width': 500,
     },
 }
-
-

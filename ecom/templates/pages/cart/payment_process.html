@@ -1,0 +1,139 @@
+{% extends 'layouts/master.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container mt-5">
+      <h2 class="mb-4 text-center">Select Payment Method</h2>
+      <form action="{% url 'payment_process' order_id=order.id %}" method="post" class="payment-form">
+          {% csrf_token %}
+          <div class="accordion-summary" id="accordion-payment">
+              <div class="card mb-3">
+                  <div class="card-header" id="heading-1">
+                      <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+                          <div class="card-body">
+                              <label class="payment-option">
+                                  <input type="radio" name="payment_method" value="credit_card" required onclick="toggleCreditCardFields()">
+                                  <span class="payment-icon"><i class="fas fa-credit-card"></i></span>
+                                  <span class="payment-text">Credit Card</span>
+                              </label>
+                              <div id="creditCardFields" style="display: none;">
+                                  <input type="text" name="card_number" placeholder="Card Number" required>
+                                  <input type="text" name="card_holder" placeholder="Card Holder Name" required>
+                                  <input type="text" name="expiry_date" placeholder="MM/YY" required>
+                                  <input type="text" name="cvv" placeholder="CVV" required>
+                              </div>
+                          </div>
+                          <script>
+                             
+                          </script>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="card mb-3">
+                  <div class="card-header" id="heading-2">
+                      <div id="collapse-2" class="collapsed" aria-labelledby="heading-2" data-parent="#accordion-payment">
+                          <div class="card-body">
+                              <label class="payment-option">
+                                <input type="radio" name="payment_method" value="debit_card" required onclick="toggleDebitCardFields()">
+                                <span class="payment-icon"><i class="fas fa-credit-card"></i></span>
+                                  <span class="payment-text">Debit Card</span>
+                              </label>
+                              <div id="creditCardFields" style="display: none;">
+                                <input type="text" name="card_number" placeholder="Card Number" required>
+                                <input type="text" name="card_holder" placeholder="Card Holder Name" required>
+                                <input type="text" name="expiry_date" placeholder="MM/YY" required>
+                                <input type="text" name="cvv" placeholder="CVV" required>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="card mb-3">
+                  <div class="card-header" id="heading-3">
+                      <div id="collapse-3" class="collapsed" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                          <div class="card-body">
+                              <label class="payment-option">
+                                  <input type="radio" name="payment_method" value="esewa" required>
+                                  <span class="payment-icon"><i class="fas fa-wallet"></i></span>
+                                  <span class="payment-text">Esewa</span>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="card mb-3">
+                  <div class="card-header" id="heading-4">
+                      <div id="collapse-4" class="collapsed" aria-labelledby="heading-4" data-parent="#accordion-payment">
+                          <div class="card-body">
+                              <label class="payment-option">
+                                  <input type="radio" name="payment_method" value="khalti" required>
+                                  <span class="payment-icon"><i class="fas fa-mobile-alt"></i></span>
+                                  <span class="payment-text">Khalti</span>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="card mb-3">
+                  <div class="card-header" id="heading-5">
+                      <div id="collapse-5" class="collapsed" aria-labelledby="heading-5" data-parent="#accordion-payment">
+                          <div class="card-body">
+                              <label class="payment-option">
+                                  <input type="radio" name="payment_method" value="cash_on_delivery" required>
+                                  <span class="payment-icon"><i class="fas fa-money-bill-wave"></i></span>
+                                  <span class="payment-text">Cash on Delivery</span>
+                              </label>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary btn-lg">Proceed to Payment</button>
+          </div>
+      </form>
+  </div>
+
+  <style>
+      .payment-form {
+          max-width: 600px;
+          margin: 0 auto;
+      }
+      .payment-option {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          padding: 10px;
+          transition: background-color 0.3s;
+      }
+      .payment-option:hover {
+          background-color: #f8f9fa;
+      }
+      .payment-icon {
+          font-size: 24px;
+          margin-right: 15px;
+          width: 40px;
+          text-align: center;
+      }
+      .payment-text {
+          font-size: 18px;
+      }
+      .card {
+          border: none;
+          box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+      .card-header {
+          background-color: #ffffff;
+          border-bottom: none;
+      }
+      .btn-primary {
+          padding: 12px 30px;
+          font-size: 18px;
+      }
+  </style>
+{% endblock %}

@@ -1,73 +1,126 @@
-  {% extends 'layouts/master.html' %}
-  {% load static %}
-  {% block content %}
-  <section class="message-section">
-      <div class="container">
-          <div class="row">
-              <div class="col-md-12">
-                  {% if messages %}
-                      {% for message in messages %}
-                          <div class="alert alert-success">
-                              <p class="text-center mb-0">{{message}}</p>
-                          </div>
-                      {% endfor %}
-                  {% endif %}
-              </div>
-          </div>
-      </div>   
-  </section>
-  <section>
-  <div class="container mt-5">
-      <h2 class="mb-4 text-center">Checkout</h2>
-      <div class="row">
-          <div class="col-md-8">
-              <form method="post" id="checkout-form">
-                  {% csrf_token %}
-                  <div class="mb-3">
-                      <label for="apartment_address" class="form-label">Apartment Address</label>
-                      <input type="text" class="form-control" id="apartment_address" name="apartment_address">
-                  </div>
-                  <div class="mb-3">
-                      <label for="city" class="form-label">City</label>
-                      <input type="text" class="form-control" id="city" name="city" required>
-                  </div>
-                  <div class="mb-3">
-                      <label for="state" class="form-label">State</label>
-                      <input type="text" class="form-control" id="state" name="state" required>
-                  </div>
-                  <div class="mb-3">
-                      <label for="country" class="form-label">Country</label>
-                      <input type="text" class="form-control" id="country" name="country" required>
-                  </div>
-                  <div class="mb-3">
-                      <label for="zip_code" class="form-label">ZIP Code</label>
-                      <input type="text" class="form-control" id="zip_code" name="zip_code" required>
-                  </div>
-                  <div class="mb-3">
-                      <label for="payment_method" class="form-label">Payment Method</label>
-                      <select class="form-control" id="payment_method" name="payment_method" required>
-                          <option value="credit_card">Credit Card</option>
-                          <option value="debit_card">Debit Card</option>
-                          <option value="khalti">Khalti</option>
-                      </select>
-                  </div>
-                  <button type="submit" class="btn btn-primary text-float">Place Order</button>
-              </form>
-          </div>
-          <br>
-          <div class="col-lg-4">
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">Order Summary</h5>
-                  <p class="card-text">Total Items: {{ cart_items|length }}</p>
-                  <p class="card-text">Subtotal: Rs{{ cart_total }}</p>
-                  <p class="card-text">Tax (10%): Rs{{ tax }}</p>
-                  <h6 class="card-subtitle mb-2 text-muted">Total: Rs{{ total }}</h6>
-                </div>
-              </div>
-            </div>
-          </div>
-      </div>
-  </div>
-  </section>
-  {% endblock %}
+{% extends 'layouts/master.html' %}
+{% load static %}
+{% block content %}
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('{% static 'images/page-header-bg.jpg' %})">
+        <div class="container">
+            <h1 class="page-title">Checkout</h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="checkout">
+            <div class="container">
+                <div class="checkout-discount">
+                    <form action="#">
+                        <input type="text" class="form-control" required id="checkout-discount-input">
+                        <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+                    </form>
+                </div><!-- End .checkout-discount -->
+                <form method="POST" action="{% url 'checkout' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>First Name *</label>
+                                    <input type="text" class="form-control" name="first_name" required>
+                                </div><!-- End .col-sm-6 -->
+                                <div class="col-sm-6">
+                                    <label>Last Name *</label>
+                                    <input type="text" class="form-control" name="last_name" required>
+                                </div><!-- End .col-sm-6 -->
+                            </div><!-- End .row -->
+                            <label>Country *</label>
+                            <input type="text"  class="form-control" name="country" required>
+
+                            <label>Street address *</label>
+                            <input type="text" class="form-control" placeholder="House number and Street name" name="street_address" required>
+                            <input type="text" class="form-control" placeholder="Apartments, suite, unit etc ...">
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Town / City *</label>
+                                    <input type="text" class="form-control" name="town_city" required>
+                                </div><!-- End .col-sm-6 -->
+
+                                <div class="col-sm-6">
+                                    <label>State / County *</label>
+                                    <input type="text" class="form-control" name="state_county" required>
+                                </div><!-- End .col-sm-6 -->
+                            </div><!-- End .row -->
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Postcode / ZIP *</label>
+                                    <input type="text" class="form-control" name="postcode" required>
+                                </div><!-- End .col-sm-6 -->
+
+                                <div class="col-sm-6">
+                                    <label>Phone *</label>
+                                    <input type="tel" class="form-control" name="phone" required>
+                                </div><!-- End .col-sm-6 -->
+                            </div><!-- End .row -->
+                            <label>Email address *</label>
+                            <input type="email" class="form-control" name="email" required>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="checkout-diff-address">
+                                <label class="custom-control-label" for="checkout-diff-address">Ship to a different address?</label>
+                            </div><!-- End .custom-checkbox -->
+
+                            <label>Order notes (optional)</label>
+                            <textarea class="form-control" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery" name="order_notes"></textarea>
+                        </div><!-- End .col-lg-9 -->
+                        <div class="col-lg-3">
+                            <div class="summary">
+                                <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+                                <table class="table table-summary">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for cart_item in cart_items %}
+                                        <tr>
+                                            <td>{{ cart_item.product.name }}</td>
+                                            <td>{{ cart_item.product.price }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr class="summary-subtotal">
+                                            <td>Subtotal:</td>
+                                            <td>Rs:{{ cart_total }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tax (10%):</td>
+                                            <td>Rs:{{ tax }}</td>
+                                        </tr>
+                                        <tr class="summary-total">
+                                            <td>Total:</td>
+                                            <td>Rs:{{ total }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                    <span class="btn-text">Place Order</span>
+                                    <span class="btn-hover-text">Proceed for Payment</span>
+                                </button>
+                            </div><!-- End .summary -->
+                        </div><!-- End .col-lg-3 -->
+                    </div><!-- End .row -->
+                </form>
+            </div><!-- End .container -->
+        </div><!-- End .checkout -->
+    </div><!-- End .page-content -->
+</main>
+{% endblock %}

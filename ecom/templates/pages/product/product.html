@@ -35,17 +35,26 @@
                             <img src="{{ product.image.url }}" class="product-image">
                         </a>
 
-                        <div class="product-action action-icon-top">
-                            <a href="{% url 'cart' %}" class="btn-product btn-cart"><span>add to cart</span></a>
+                        <div class="product-action action-icon-top" style ="justify-content: center; align-items: center;">
+                            <form method="POST" action="{% url 'add_to_cart' %}">  
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn-product btn-cart" style="border: none; background-color: white; display: flex;"><span>Add to Cart</span>
+                            </form>
                         </div><!-- End .product-action -->
                     </figure><!-- End .product-media -->
 
                     <div class="product-body product-action-inner">
-                        <a href="{% url 'wishlist'  %}" class="btn-product btn-wishlist" title="Add to wishlist">
-                            <span>Add to Wishlist</span>
-                        </a>
+                        <form method="POST" action="{% url 'add_to_wishlist' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <button  type="submit"class="btn-product-icon btn-wishlist " title="Add to wishlist">
+                                <span>Add to Wishlist</span>
+                            </button>
+                        </form>
                         <div class="product-cat">
-                            <a href="{% url 'product_category' product.category %}">{{ product.category.name }}</a>
+                            <a href="{% url 'product_category' product.category.id %}">{{ product.category.name }}</a>
                         </div><!-- End .product-cat -->
                         
                         <h3 class="product-title">

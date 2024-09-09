@@ -111,13 +111,16 @@
                                         <figure class="product-media">
                                             <a href="product.html">
                                                 <img src="{{product.image.url}}" class="product-image">
-                                                <img src="{{product.image2.url}}" class="product-image-hover">
+                                                <img src="{{product.image2.url}}" class="product-image-hover">    
                                             </a>
                                         <div class="product-action-vertical">
-                                                <a href="{% url 'wishlist' %}" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                            </div><!-- End .product-action -->
-                                            <div class="product-action">
-                                                <a href="{% url 'cart' %}" class="btn-product btn-cart"><span>add to cart</span></a>
+                                            <form method="POST" action="{% url 'add_to_wishlist' %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                                <button  type="submit" class="btn-product-icon btn-wishlist btn-expandable" title="Add to wishlist">
+                                                    <span>Add to Wishlist</span>
+                                                </button>
+                                            </form>
                                             </div><!-- End .product-action -->
                                         </figure><!-- End .product-media -->
                                         <div class="product-body">
@@ -154,7 +157,7 @@
                                         <h4 class="widget-title">Best Selling</h4><!-- End .widget-title -->
                                         {% for selling in bestselling %}
                                         <div class="products">
-                                            <div class="product product-sm">
+                                            <div class="product product-sm me-2">
                                                 <figure class="product-media">
                                                     <a href="product.html">
                                                         <img src="{{ selling.image.url }}" alt="Product image" class="product-image">

@@ -9,7 +9,7 @@
         <div class="container d-flex align-items-center">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{% url 'home'%}">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Products</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'product' %}">Products</a></li>
                 <li class="breadcrumb-item active" aria-current="page">{{ products.name }}</li>
             </ol>
         </div>
@@ -38,39 +38,55 @@
                 <!-- End .col-md-6 -->
                 <div class="col-md-6">
                     <div class="product-details">
-                        <h1 class="product-title">{{ products.name }}</h1>
-                            <!-- End .product-title -->
-                            <div class="ratings-container">
-                                <div class="ratings">
-                                <div class="ratings-val" style="width: 80%"></div>
-                                <!-- End .ratings-val -->
-                                </div>
-                                <!-- End .ratings -->
-                                <a  class="ratings-text"  href="#product-review-link" id="review-link">( 2 Reviews )</a>
-                            </div>
-                            <!-- End .rating-container -->
-                        <div class="product-price">Rs{{ products.price }}</div>
-                        <!-- End .product-price -->
+                        <div class="d-flex align-items-center">
+                            <h1 class="product-title">{{ products.name }}</h1>
+                            <div class="details-action-wrapper">
+                                <form method="POST" action="{% url 'add_to_wishlist' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ products.id }}">
+                                    <button type="submit" class="btn-product-icon btn-wishlist" title="Add to wishlist">
+                                        <span>Add to Wishlist</span>
+                                    </button>
+                                </form>                                    
+                            </div> 
                         </div>
+                            <div class="ratings">
+                                <div class="ratings-val" style="width: 80%">
+                                </div>
+                                <!-- End .ratings-val -->
+                            </div>
+                            <!-- End .ratings -->
+                            <a class="ratings-text" href="#product-review-link" id="review-link">{{review.rating}}</a>
+                        </div>
+                        <!-- End .rating-container -->
+                        <div class="product-price">Rs{{ products.price }}
+                        </div>
+                        <!-- End .product-price -->
                         <div class="product-content">
-                        <p>{{ products.description|safe|truncatewords:15 }}</p>
+                            <p>{{ products.description|safe}}</p>
                         </div>
                         <!-- End .product-content -->
                         <div class="details-filter-row details-row-size">
-                        <label>Color:</label>
+                            <label>Color:</label>
+                            <a href="#">{{products.color}}</a>
                         </div>
                         <!-- End .details-filter-row -->
+                        <div class="product-details-action">
+                            <div class="product-cat">
+                                <span>Category:</span>
+                                <a href="#">{{ products.category.name }}</a>
+                            </div>
+                        </div>
+                        <!-- End .product-cat -->
                         <div class="details-filter-row details-row-size">
                             <label for="size">Size:</label>
                                 <div class="select-custom">
                                     <select name="size" id="size" class="form-control">
-                                        <option value="#" selected="selected">Select a size</option>
-                                        <option value="s">Small</option>
-                                        <option value="m">Medium</option>
-                                        <option value="l">Large</option>
-                                        <option value="xl">Extra Large</option>
+                                        <option value="" selected="selected">Select a size</option>
+                                        <option value="{{ size.id }}">{{ size.name }}</option>
                                     </select>
                                 </div>
+                            </div>
                             <!-- End .select-custom -->
                             <div class="details-filter-row details-row-size">
                                 <label for="qty">Qty:</label>
@@ -80,31 +96,24 @@
                                 <!-- End .product-details-quantity -->
                             </div>
                             <!-- End .details-filter-row -->
+                            <div class="product-details-action">
+                                <form method="POST" action="{% url 'add_to_cart' %}">  
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ products.id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="btn-product btn-cart" style="border: none; "><span>Add to Cart</span></form>
+                                    </form>                                    
+                            </div>
+                            <!-- End .product-details-action -->
                         </div>
-                        <div class="product-details-action">
-                            <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                            <div class="details-action-wrapper">
-                                <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
-                            </div> 
-                            <!-- End .details-action-wrapper -->
-                        </div>
-                        <!-- End .product-details-action -->
-                        <div class="product-details-action">
-                            <div class="product-cat">
-                                <span>Category:</span>
-                                <a href="#">{{ products.category }}</a>,
-                            <div>
-                        </div>
-                        <!-- End .product-cat -->
+                        <!-- End .product-details -->
                     </div>
-                    <!-- End .product-details -->
+                    <!-- End .col-md-6 -->
                 </div>
-                <!-- End .col-md-6 -->
+                <!-- End .row -->
             </div>
-            <!-- End .row -->
-        </div>
-        <!-- End .product-details-top -->
-        <div class="product-details-tab">
+            <!-- End .product-details-top -->
+            <div class="product-details-tab">
             <ul class="nav nav-pills justify-content-center" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active"id="product-desc-link"data-toggle="tab"href="#product-desc-tab"role="tab"aria-controls="product-desc-tab"aria-selected="true">Description</a>

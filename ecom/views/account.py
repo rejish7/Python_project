@@ -18,21 +18,27 @@ from ecom.tokens import activation_token
 from django.db.models import F, Sum
 from decimal import Decimal
 from django.contrib.auth.decorators import login_required
-User = get_user_model()
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            messages.success(request, 'You have successfully logged in.', extra_tags='timeout-5000')
-            return redirect('home')
-        else:
-            messages.error(request, 'Invalid username or password.', extra_tags='timeout-5000')
-    return render(request, 'pages/account/login.html')
+from ecom.forms import LoginForm
 
+class LoginView(View):
+    def get(self, request):
+        form = LoginForm()
+        return render(request, 'pages/account/login.html', {'form': form})
 
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(request, email=email, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            else:
+                messages.error(request, 'Invalid email or password.', extra_tags='timeout-5000')
+        return render(request, 'pages/account/login.html', {'form': form})
+
+@login_required
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have successfully logged out.', extra_tags='timeout-5000')
@@ -62,6 +68,7 @@ def forgot_password(request):
         else:
             messages.error(request, 'No user found with that email address.')
     return render(request, 'pages/account/forgot.html')
+
 
 def password_reset_confirm(request, uidb64, token):
     try:
@@ -201,10 +208,13 @@ def resend_activation_email(request):
 @login_required
 def dashboard(request):
     user = request.user
-    orders = Order.objects.filter(user=user).order_by('-created_at')
+    orders = Order.objects.filter(checkout__user=user).order_by('-checkout__created_at')
     wishlist_items = WishlistItem.objects.filter(user=user)
     
-    user_profile = get_object_or_404(UserProfile, user=user)
+    try:
+        user_profile = UserProfile.objects.get(user=user)
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=user)
 
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=user_profile)
@@ -222,7 +232,6 @@ def dashboard(request):
         'form': form,
     }
     return render(request, 'pages/account/dashboard.html', context)
-
 @login_required
 def update_account(request):
     if request.method == 'POST':
@@ -241,16 +250,24 @@ def update_account(request):
                 if new_password == confirm_new_password:
                     user.set_password(new_password)
                     messages.success(request, 'Your password has been updated.', extra_tags='timeout-5000')
-                    user.save()
                 else:
                     messages.error(request, 'New passwords do not match.', extra_tags='timeout-5000')
+                    return redirect('dashboard')
             else:
                 messages.error(request, 'Current password is incorrect.', extra_tags='timeout-5000')
+                return redirect('dashboard')
+        
+        user.save()
+        messages.success(request, 'Your account has been updated.', extra_tags='timeout-5000')
+        
     return redirect('dashboard')
-
 @login_required
 def edit_address(request):
-    user_profile = request.user.userprofile
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=request.user)
+
     if request.method == 'POST':
         form = UserProfileForm(request.POST, instance=user_profile)
         if form.is_valid():

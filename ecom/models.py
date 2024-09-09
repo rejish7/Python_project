@@ -1,10 +1,7 @@
 from django.db import models
 from ckeditor.fields import RichTextField
-from django.contrib.auth.models import User
 from django.utils.text import slugify
-
-
-
+from django.contrib.auth.models import User
 
 class Setting(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -68,26 +65,10 @@ class CompanyService(models.Model):
     class Meta:
         verbose_name = 'Company Service'
         verbose_name_plural = 'Company Services'
-        
 
-class Product(models.Model):
-    name = models.CharField(max_length=200)
-    description = RichTextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    image = models.ImageField(upload_to='products/', null=True, blank=True)
-    category = models.CharField(max_length=100)
-    specifications = RichTextField()
-    shipping_info = RichTextField()
-    stock = models.PositiveIntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True, blank=True)
-    products = models.ManyToManyField(Product, related_name='categories')
     image = models.ImageField(upload_to='category/',blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -105,12 +86,27 @@ class Category(models.Model):
         verbose_name_plural = 'Categories'
         
 
+class Product(models.Model):
+    name = models.CharField(max_length=200)
+    description = RichTextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    image = models.ImageField(upload_to='products/', null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='reviews')
+    specifications = RichTextField()
+    shipping_info = RichTextField()
+    stock = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Review(models.Model):
-    
-    RATING_CHOICES = [(i, i) for i in range(1, 6)]  
+    RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]  
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    rating = models.PositiveIntegerField(choices=RATING_CHOICES) # type: ignore
+    rating = models.PositiveIntegerField(choices=RATING_CHOICES, default=1)
     comment = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -121,7 +117,8 @@ class Review(models.Model):
         verbose_name = 'Review'
         verbose_name_plural = 'Reviews'
         ordering = ['-created_at']
-    
+
+
 class Bestselling(models.Model):
     image = models.ImageField(upload_to='bestselling/',blank=True)
     title = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -142,46 +139,69 @@ class CartItem(models.Model):
         verbose_name = 'Cart Item'
         verbose_name_plural = 'Cart Items'
 
-class Order(models.Model):
+class Checkout(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    items = models.ManyToManyField(CartItem)
-    total_price = models.DecimalField(max_digits=10, decimal_places=1)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    street_address = models.CharField(max_length=255)
+    apartment = models.CharField(max_length=255, blank=True, null=True)
+    town_city = models.CharField(max_length=100)
+    state_county = models.CharField(max_length=100)
+    postcode = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20)
+    email = models.EmailField()
+    order_notes = models.TextField(blank=True, null=True)
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Order by {self.user}"
+        return f"Checkout for User {self.user}"
+
+    class Meta:
+        verbose_name = 'Checkout'
+        verbose_name_plural = 'Checkouts'
+
+
+class Order(models.Model):
+
+    checkout = models.ForeignKey(Checkout, on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+
+        return f"Order {self.checkout.user} - {self.product.name}"
 
     class Meta:
         verbose_name = 'Order'
         verbose_name_plural = 'Orders'
 
-class CheckoutAddress(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    apartment_address = models.CharField(max_length=100, blank=True, null=True)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
-    zip_code = models.CharField(max_length=20)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return f"{self.user}'s address"
-
-    class Meta:
-        verbose_name = 'Checkout Address'
-        verbose_name_plural = 'Checkout Addresses'
 
 class Payment(models.Model):
     PAYMENT_METHODS = (
         ('credit_card', 'Credit Card'),
         ('debit_card', 'Debit Card'),
+
+        ('esewa', 'Esewa'),
         ('khalti', 'Khalti'),
+
+        ('cod', 'Cash on Delivery'),
     )
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+    checkout = models.ForeignKey(Checkout, on_delete=models.CASCADE)
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     transaction_id = models.CharField(max_length=100, unique=True)
@@ -190,27 +210,12 @@ class Payment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Payment {self.transaction_id} for Order {self.order.user}"
+
+        return f"Payment {self.transaction_id} for Checkout {self.checkout.user}"
 
     class Meta:
         verbose_name = 'Payment'
         verbose_name_plural = 'Payments'
-
-class Checkout(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    order = models.OneToOneField(Order, on_delete=models.CASCADE)
-    address = models.ForeignKey(CheckoutAddress, on_delete=models.SET_NULL, null=True)
-    payment = models.OneToOneField(Payment, on_delete=models.SET_NULL, null=True)
-    is_complete = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"Checkout for Order {self.order}"
-
-    class Meta:
-        verbose_name = 'Checkout'
-        verbose_name_plural = 'Checkouts'
         
 class Testimonials(models.Model):
     image = models.ImageField(upload_to='testimonials/',blank=True)
@@ -250,7 +255,7 @@ class FAQ(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.IntegerField()
+    phone = models.IntegerField(blank=True, null=True)
     address = models.CharField(max_length=200)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
@@ -263,3 +268,43 @@ class UserProfile(models.Model):
     class Meta:
         verbose_name = 'User Profile'
         verbose_name_plural = 'User Profiles'
+        
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    order = models.ForeignKey(Checkout, on_delete=models.CASCADE)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.message}"
+
+
+class BlogPost(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = RichTextField()
+    image = models.ImageField(upload_to='blog_images/')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    tags = models.CharField(max_length=100)
+    category = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        verbose_name = 'Blog Post'
+        verbose_name_plural = 'Blog Posts'
+
+class Comment(models.Model):
+    post = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Comment by {self.author.username} on {self.post.title}"
+    
+    class Meta:
+        verbose_name = 'Comment'
+        verbose_name_plural = 'Comments'

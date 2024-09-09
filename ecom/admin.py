@@ -61,7 +61,6 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ('name', 'slug')
     list_filter = ('created_at', 'updated_at')
     readonly_fields = ('created_at', 'updated_at')
-    filter_horizontal = ('products',)
     
     def show_image(self, obj):
         if obj.image:
@@ -95,30 +94,23 @@ class CartItemAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'total_price', 'created_at', 'updated_at')
-    list_filter = ('created_at', 'updated_at')
-    search_fields = ('user__username',)
-    filter_horizontal = ('items',)
-
-@admin.register(CheckoutAddress)
-class CheckoutAddressAdmin(admin.ModelAdmin):
-    list_display = ('user', 'city', 'state', 'country', 'zip_code', 'created_at', 'updated_at')
-    list_filter = ('created_at', 'updated_at')
-    search_fields = ('user__username', 'city', 'state', 'country')
-
-@admin.register(Payment)
-class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('user', 'order', 'payment_method', 'amount', 'transaction_id', 'status', 'created_at', 'updated_at')
-    list_filter = ('payment_method', 'status', 'created_at', 'updated_at')
-    search_fields = ('user__username', 'order__id', 'transaction_id')
+    list_display = ('checkout', 'product', 'quantity', 'price')
+    list_filter = ('checkout__created_at',)
+    search_fields = ('checkout__user__username', 'product__name')
 
 @admin.register(Checkout)
 class CheckoutAdmin(admin.ModelAdmin):
-    list_display = ('user', 'order', 'address', 'payment', 'is_complete', 'created_at', 'updated_at')
-    list_filter = ('is_complete', 'created_at', 'updated_at')
-    search_fields = ('user__username', 'order__id')
+    list_display = ('user', 'total_amount', 'first_name', 'last_name', 'town_city', 'state_county', 'country', 'postcode', 'phone', 'email', 'status', 'created_at', 'updated_at')
+    list_filter = ('status', 'created_at', 'updated_at')
+    search_fields = ('user__username', 'first_name', 'last_name', 'email', 'town_city', 'state_county', 'country')
+    raw_id_fields = ('user',)
+    readonly_fields = ('created_at', 'updated_at')
 
-@admin.register(Testimonials)
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('user', 'checkout', 'payment_method', 'amount', 'transaction_id', 'status', 'created_at', 'updated_at')
+    list_filter = ('payment_method', 'status', 'created_at', 'updated_at')
+    search_fields = ('user__username', 'checkout__id', 'transaction_id')
 class TestimonialsAdmin(admin.ModelAdmin):
     list_display = ('username', 'description', 'show_image')
     
@@ -139,3 +131,23 @@ class WishlistItemAdmin(admin.ModelAdmin):
 class FAQAdmin(admin.ModelAdmin):
     list_display = ('question','answer')
 
+@admin.register(BlogPost)
+class BlogPostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'author', 'category', 'created_at', 'updated_at', 'show_image')
+    list_filter = ('category', 'created_at', 'updated_at')
+    search_fields = ('title', 'author__username', 'content', 'tags', 'category')
+    readonly_fields = ('created_at', 'updated_at')
+
+    def show_image(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" width="100" height="auto" />', obj.image.url)
+        return ''
+
+    show_image.short_description = 'Image Preview'
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('post', 'author', 'content', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('post__title', 'author__username', 'content')
+    readonly_fields = ('created_at',)
